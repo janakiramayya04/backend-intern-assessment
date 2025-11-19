@@ -4,7 +4,12 @@ version = "0.1.0"
 description = "Backend template - FastAPI"
 readme = "README.md"
 dependencies = [
+    "asyncpg>=0.30.0",
     "fastapi[all]>=0.121.2",
+    "passlib[bcrypt]>=1.7.4",
+    "psycopg2-binary>=2.9.11",
     "pyrefly>=0.42.1",
+    "python-jose[cryptography]>=3.5.0",
     "ruff>=0.14.5",
+    "sqlalchemy>=2.0.44",
 ]

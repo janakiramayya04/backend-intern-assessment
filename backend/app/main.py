@@ -1,12 +1,25 @@
 from fastapi import FastAPI
-# from app.api.router import user, item
-# from app.core.database import engine, Base
-import logging
-logging.basicConfig(level=logging.INFO)
-app = FastAPI()
-# Base.metadata.create_all(bind=engine)
-# app.include_router(user.router)
-# app.include_router(item.router)
+from fastapi.middleware.cors import CORSMiddleware
+
+from app.api.router import router
+
+
+
+app = FastAPI(
+    title="Backend Task",
+    version="1.0.0"  
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+app.include_router(router)
+
 @app.get("/")
 def read_root():
-    return {"message": "Welcome to the FastAPI application!"}
+    return {"message": "API is running. Go to /docs for Swagger UI"}

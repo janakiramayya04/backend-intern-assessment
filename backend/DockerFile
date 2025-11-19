@@ -1,0 +1,8 @@
+FROM python:3.10-slim
+WORKDIR /app
+COPY requirements.txt . 
+# (Or generate requirements.txt from pyproject.toml if needed, 
+# otherwise just COPY . . and install via pip)
+COPY . .
+RUN pip install --no-cache-dir fastapi uvicorn sqlalchemy psycopg2-binary passlib[bcrypt] python-jose[cryptography] multipart
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
