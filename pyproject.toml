@@ -1,0 +1,10 @@
+[project]
+name = "fastapi-template"
+version = "0.1.0"  
+description = "Backend template - FastAPI"
+readme = "README.md"
+dependencies = [
+    "fastapi[all]>=0.121.2",
+    "pyrefly>=0.42.1",
+    "ruff>=0.14.5",
+]
