@@ -46,7 +46,7 @@ async def create_item(
     db: AsyncSession = Depends(database.get_db),
     current_user: models.User = Depends(get_current_user)
 ):
-    new_item = models.Item(**item.dict(), owner_id=current_user.id)
+    new_item = models.Item(**item.model_dump(), owner_id=current_user.id)
     db.add(new_item)
 
     await db.commit()
@@ -77,7 +77,33 @@ async def read_items(
     )
     return result.scalars().all()
 
+@router.put("/items/{item_id}", response_model=schemas.ItemResponse)
+async def update_item(
+    item_id: int,
+    item_update: schemas.ItemUpdate,
+    db: AsyncSession = Depends(database.get_db),
+    current_user: models.User = Depends(get_current_user)
+):
+    
+    result = await db.execute(select(models.Item).where(models.Item.id == item_id))
+    db_item = result.scalar_one_or_none()
 
+    if not db_item:
+        raise HTTPException(status_code=404, detail="Item not found")
+
+    
+    if current_user.role != "admin" and db_item.owner_id != current_user.id:
+        raise HTTPException(status_code=403, detail="Not authorized to update this item")
+
+    
+    if item_update.title is not None:
+        db_item.title = item_update.title #type: ignore[assignment]
+    if item_update.description is not None:
+        db_item.description = item_update.description #type: ignore[assignment]
+
+    await db.commit()
+    await db.refresh(db_item)
+    return db_item
 
 @router.delete("/items/{item_id}")
 async def delete_item(

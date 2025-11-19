@@ -5,26 +5,31 @@ services:
     image: postgres:15
     environment:
       POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgrespassword
-      POSTGRES_DB: bajarangs_db
+      POSTGRES_PASSWORD: mysecretypassword
+      POSTGRES_DB: backend_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
   backend:
     build: ./backend
-    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     volumes:
       - ./backend:/app
     ports:
       - "8000:8000"
     depends_on:
       - db
-    environment:
-      POSTGRES_SERVER: db
-      POSTGRES_PASSWORD: postgrespassword
-      POSTGRES_DB: bajarangs_db
+  
+    env_file:
+      - .env
+    restart: on-failure
+    
 
 volumes:
   postgres_data:

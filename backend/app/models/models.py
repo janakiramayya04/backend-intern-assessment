@@ -15,7 +15,7 @@ class User(Base):
     hashed_password = Column(String)
     role = Column(String, default="user") 
 
-    items = relationship("Item", back_populates="owner")
+    items = relationship("Item", back_populates="owner", lazy="selectin")
 
 class Item(Base):
     __tablename__ = "items"

@@ -37,7 +37,7 @@ async def register(
     db.add(new_user)
     await db.commit()
     await db.refresh(new_user)
-
+    new_user.items = []
     return new_user
 
 

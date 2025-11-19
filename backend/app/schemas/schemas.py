@@ -9,6 +9,10 @@ class ItemBase(BaseModel):
 class ItemCreate(ItemBase):
     pass
 
+class ItemUpdate(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    
 class ItemResponse(ItemBase):
     id: int
     owner_id: int
